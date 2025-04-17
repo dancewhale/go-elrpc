@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/kiwanami/go-elrpc/parser"
+	"github.com/dancewhale/go-elrpc/parser"
 )
 
 var uidCounter struct {

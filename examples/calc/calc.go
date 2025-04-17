@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/kiwanami/go-elrpc"
+	"github.com/dancewhale/go-elrpc"
 )
 
 func main() {

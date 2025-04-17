@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/kiwanami/go-elrpc/parser"
+	"github.com/dancewhale/go-elrpc/parser"
 )
 
 func Decode(sexp string) ([]interface{}, error) {
@@ -12,7 +12,7 @@ func Decode(sexp string) ([]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]interface{}, len(sexp))
+	ret := make([]interface{}, len(sexps))
 	for i, sexp := range sexps {
 		ret[i] = sexp.ToValue()
 	}
@@ -54,10 +54,51 @@ func ConvertType(targetType reflect.Type, srcValue reflect.Value) (reflect.Value
 		fallthrough
 	case reflect.Array:
 		return ConvertArrayType(targetType, srcValue)
+	case reflect.Map:
+		return ConvertMapType(targetType, srcValue)
 	default:
 	}
 
 	return srcValue.Convert(targetType), nil
+}
+
+func ConvertMapType(targetType reflect.Type, srcValue reflect.Value) (reflect.Value, error) {
+	if srcValue.Type().Kind() != reflect.Slice {
+		return reflect.ValueOf(nil), fmt.Errorf("cannot convert non-slice to map, got: [%v]",
+			srcValue.Type().Kind().String())
+	}
+
+	keyType := targetType.Key()
+	valType := targetType.Elem()
+	retMapVal := reflect.MakeMap(targetType)
+
+	l := srcValue.Len()
+	for i := 0; i < l; i++ {
+		elem := srcValue.Index(i).Interface()
+		elemSlice, ok := elem.([]interface{})
+		if !ok {
+			return reflect.ValueOf(nil), fmt.Errorf("map element at index %d is not a slice", i)
+		}
+
+		if len(elemSlice) != 2 {
+			return reflect.ValueOf(nil), fmt.Errorf("map element at index %d does not have exactly 2 elements (has %d)", i, len(elemSlice))
+		}
+
+		// Convert key and value to the target types
+		keyVal, err := ConvertType(keyType, reflect.ValueOf(elemSlice[0]))
+		if err != nil {
+			return reflect.ValueOf(nil), fmt.Errorf("failed to convert key at index %d: %v", i, err)
+		}
+
+		valVal, err := ConvertType(valType, reflect.ValueOf(elemSlice[1]))
+		if err != nil {
+			return reflect.ValueOf(nil), fmt.Errorf("failed to convert value at index %d: %v", i, err)
+		}
+
+		retMapVal.SetMapIndex(keyVal, valVal)
+	}
+
+	return retMapVal, nil
 }
 
 func convertElm(lst reflect.Value, i int, elmType reflect.Type) reflect.Value {
@@ -104,6 +145,11 @@ func ConvertArrayType(targetType reflect.Type, srcValue reflect.Value) (reflect.
 			retSliceVal.Index(i).Set(cv)
 		}
 	case reflect.Slice:
+		for i := 0; i < len; i++ {
+			cv := convertElm(srcValue, i, elmType)
+			retSliceVal.Index(i).Set(cv)
+		}
+	case reflect.Map:
 		for i := 0; i < len; i++ {
 			cv := convertElm(srcValue, i, elmType)
 			retSliceVal.Index(i).Set(cv)

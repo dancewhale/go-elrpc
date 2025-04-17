@@ -3,7 +3,7 @@
 EPC is an RPC stack for Emacs Lisp and `elrpc` is an implementation of EPC in Go.
 Using `elrpc`, you can develop an emacs extension in Go.
 
-- [EPC at github](https://github.com/kiwanami/emacs-epc)
+- [EPC at github](https://github.com/dancewhale/emacs-epc)
 
 ## Sample Code
 
@@ -18,7 +18,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/kiwanami/go-elrpc"
+	"github.com/dancewhale/go-elrpc"
 )
 
 func main() {
@@ -74,7 +74,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/kiwanami/go-elrpc"
+	"github.com/dancewhale/go-elrpc"
 )
 
 func main() {
@@ -105,7 +105,7 @@ Echo return: 1
 ## Installation
 
 ```
-$ go get github.com/kiwanami/go-elrpc
+$ go get github.com/dancewhale/go-elrpc
 ```
 
 ## License
@@ -113,4 +113,4 @@ $ go get github.com/kiwanami/go-elrpc
 go-elrpc is licensed under MIT.
 
 ----
-(C) 2017 SAKURAI Masashi. m.sakurai at kiwanami.net
+(C) 2017 SAKURAI Masashi. m.sakurai at dancewhale.net

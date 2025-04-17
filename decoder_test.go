@@ -6,8 +6,8 @@ import (
 
 	"reflect"
 
+	ps "github.com/dancewhale/go-elrpc/parser"
 	"github.com/k0kubun/pp"
-	ps "github.com/kiwanami/go-elrpc/parser"
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 

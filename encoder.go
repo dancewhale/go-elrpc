@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/kiwanami/go-elrpc/parser"
+	"github.com/dancewhale/go-elrpc/parser"
 )
 
 type EncodeError struct {

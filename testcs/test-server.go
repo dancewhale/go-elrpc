@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/kiwanami/go-elrpc"
+	"github.com/dancewhale/go-elrpc"
 )
 
 func main() {
